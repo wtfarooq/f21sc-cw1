@@ -5,10 +5,10 @@ internal static class PlayerPalette
 {
     public static IReadOnlyList<Color> Colors { get; } =
     [
-        Color.FromArgb(80, 184, 139),
         Color.FromArgb(75, 127, 235),
-        Color.FromArgb(243, 163, 47),
         Color.FromArgb(232, 74, 95),
+        Color.FromArgb(80, 184, 139),
+        Color.FromArgb(243, 163, 47),
     ];
 
     public static Color Tint(int playerIndex)

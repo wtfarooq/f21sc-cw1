@@ -38,7 +38,7 @@ public partial class MainForm : Form
         loadButton.Click += LoadClicked;
         historyButton.Click += (_, _) => { using var dialog = new HistoryDialog(controller); dialog.ShowDialog(this); };
         FormClosing += ClosingForm;
-        FormClosed += (_, _) => model.Changed -= RefreshState;
+        FormClosed += (_, _) => { model.Changed -= RefreshState; foreach (CheckBox die in dice) die.Image?.Dispose(); };
         RefreshState(this, EventArgs.Empty);
     }
 
@@ -107,17 +107,31 @@ public partial class MainForm : Form
 
     private static Task ComputerPause() => Task.Delay(600);
 
-    // ⚀⚁⚂⚃⚄⚅ (U+2680-U+2685).
-    private static string DieFace(int value) => value switch
+    private static Bitmap DieImage(int value, Color faceColor, Color pipColor)
     {
-        1 => "\u2680",
-        2 => "\u2681",
-        3 => "\u2682",
-        4 => "\u2683",
-        5 => "\u2684",
-        6 => "\u2685",
-        _ => "-",
-    };
+        var image = new Bitmap(54, 54);
+        using Graphics graphics = Graphics.FromImage(image); graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+        using var path = new System.Drawing.Drawing2D.GraphicsPath();
+        path.AddRoundedRectangle(new Rectangle(2, 2, 49, 49), new Size(10, 10));
+        using var face = new SolidBrush(faceColor);
+        using var outline = new Pen(pipColor, 2);
+        graphics.FillPath(face, path);
+        graphics.DrawPath(outline, path);
+
+        Point[] pips = value switch
+        {
+            1 => [new(27, 27)],
+            2 => [new(16, 16), new(38, 38)],
+            3 => [new(16, 16), new(27, 27), new(38, 38)],
+            4 => [new(16, 16), new(38, 16), new(16, 38), new(38, 38)],
+            5 => [new(16, 16), new(38, 16), new(27, 27), new(16, 38), new(38, 38)],
+            6 => [new(16, 15), new(38, 15), new(16, 27), new(38, 27), new(16, 39), new(38, 39)],
+            _ => [],
+        };
+        using var pip = new SolidBrush(pipColor);
+        foreach (Point point in pips) graphics.FillEllipse(pip, point.X - 4, point.Y - 4, 8, 8);
+        return image;
+    }
 
     private void CenterDice()
     {
@@ -132,8 +146,10 @@ public partial class MainForm : Form
     private void RefreshState(object? sender, EventArgs e)
     {
         bool humanTurn = model.InProgress && model.CurrentPlayer.Type == PlayerType.Human;
-        bool rolling = model.RollsUsed is > 0 and < GameModel.MaxRolls;
-        Color diceColor = model.IsStarted ? PlayerPalette.Tint(model.CurrentIndex) : SystemColors.Control;
+        Color pipColor = model.IsStarted ? PlayerPalette.Colors[model.CurrentIndex] : Color.Gray;
+        Color faceColor = model.IsStarted
+            ? Color.FromArgb((pipColor.R + 765) / 4, (pipColor.G + 765) / 4, (pipColor.B + 765) / 4)
+            : Color.WhiteSmoke;
 
         status.Text = !model.IsStarted ? "Click New game to start."
             : model.IsComplete ? "Game over."
@@ -148,9 +164,13 @@ public partial class MainForm : Form
         {
             bool held = model.Held[i];
             dice[i].Checked = held;
-            dice[i].BackColor = diceColor;
-            string value = model.RollsUsed == 0 ? "-" : DieFace(model.Dice[i]);
-            dice[i].Text = rolling ? $"{value}\n{(held ? "HELD" : "roll")}" : value;
+            dice[i].FlatAppearance.BorderColor = Color.FromArgb(64, 64, 64);
+            dice[i].FlatAppearance.BorderSize = held ? 3 : 1;
+            dice[i].Padding = held ? new Padding(2, 2, 0, 0) : Padding.Empty;
+            Image? previous = dice[i].Image;
+            dice[i].Image = DieImage(model.RollsUsed == 0 ? 0 : model.Dice[i], faceColor, pipColor);
+            previous?.Dispose();
+            dice[i].Text = "";
         }
 
         // Columns: Category, one per player, Preview. Rebuilt only when the player count changes.

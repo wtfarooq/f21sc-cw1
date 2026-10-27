@@ -80,7 +80,8 @@ partial class MainForm
         // 
         dice0.Appearance = Appearance.Button;
         dice0.AutoCheck = false;
-        dice0.Font = new Font("Segoe UI Symbol", 32F, FontStyle.Bold);
+        dice0.FlatStyle = FlatStyle.Flat;
+        dice0.ImageAlign = ContentAlignment.MiddleCenter;
         dice0.Location = new Point(8, 8);
         dice0.Margin = new Padding(0);
         dice0.Name = "dice0";
@@ -92,7 +93,8 @@ partial class MainForm
         // 
         dice1.Appearance = Appearance.Button;
         dice1.AutoCheck = false;
-        dice1.Font = new Font("Segoe UI Symbol", 32F, FontStyle.Bold);
+        dice1.FlatStyle = FlatStyle.Flat;
+        dice1.ImageAlign = ContentAlignment.MiddleCenter;
         dice1.Location = new Point(88, 8);
         dice1.Margin = new Padding(0);
         dice1.Name = "dice1";
@@ -104,7 +106,8 @@ partial class MainForm
         // 
         dice2.Appearance = Appearance.Button;
         dice2.AutoCheck = false;
-        dice2.Font = new Font("Segoe UI Symbol", 32F, FontStyle.Bold);
+        dice2.FlatStyle = FlatStyle.Flat;
+        dice2.ImageAlign = ContentAlignment.MiddleCenter;
         dice2.Location = new Point(168, 8);
         dice2.Margin = new Padding(0);
         dice2.Name = "dice2";
@@ -116,7 +119,8 @@ partial class MainForm
         // 
         dice3.Appearance = Appearance.Button;
         dice3.AutoCheck = false;
-        dice3.Font = new Font("Segoe UI Symbol", 32F, FontStyle.Bold);
+        dice3.FlatStyle = FlatStyle.Flat;
+        dice3.ImageAlign = ContentAlignment.MiddleCenter;
         dice3.Location = new Point(248, 8);
         dice3.Margin = new Padding(0);
         dice3.Name = "dice3";
@@ -128,7 +132,8 @@ partial class MainForm
         // 
         dice4.Appearance = Appearance.Button;
         dice4.AutoCheck = false;
-        dice4.Font = new Font("Segoe UI Symbol", 32F, FontStyle.Bold);
+        dice4.FlatStyle = FlatStyle.Flat;
+        dice4.ImageAlign = ContentAlignment.MiddleCenter;
         dice4.Location = new Point(328, 8);
         dice4.Margin = new Padding(0);
         dice4.Name = "dice4";
