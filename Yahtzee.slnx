@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="Yahtzee.Core/Yahtzee.Core.csproj" />
+  <Project Path="Yahtzee.Storage/Yahtzee.Storage.csproj" />
+  <Project Path="Yahtzee.WinForms/Yahtzee.WinForms.csproj" />
+  <Project Path="Yahtzee.Tests/Yahtzee.Tests.csproj" />
+</Solution>
