@@ -12,6 +12,12 @@ public partial class MainForm : Form
     {
         InitializeComponent();
         dice = new CheckBox[] { dice0, dice1, dice2, dice3, dice4 };
+        foreach (CheckBox die in dice) die.UseVisualStyleBackColor = false;
+        grid.EnableHeadersVisualStyles = false;
+        grid.ColumnHeadersDefaultCellStyle.SelectionBackColor = SystemColors.Control;
+        grid.ColumnHeadersDefaultCellStyle.SelectionForeColor = SystemColors.ControlText;
+        dicePanel.SizeChanged += (_, _) => CenterDice();
+        CenterDice();
     }
 
     public void Bind(GameModel model, GameController controller)
@@ -113,12 +119,21 @@ public partial class MainForm : Form
         _ => "-",
     };
 
+    private void CenterDice()
+    {
+        int width = dice.Sum(die => die.Width + die.Margin.Horizontal);
+        int horizontalPadding = Math.Max(0, (dicePanel.ClientSize.Width - width) / 2);
+        dicePanel.Padding = new Padding(
+            horizontalPadding, dicePanel.Padding.Top, horizontalPadding, dicePanel.Padding.Bottom);
+    }
+
     private void Show(OperationOutcome outcome) => message.Text = outcome.Message;
 
     private void RefreshState(object? sender, EventArgs e)
     {
         bool humanTurn = model.InProgress && model.CurrentPlayer.Type == PlayerType.Human;
         bool rolling = model.RollsUsed is > 0 and < GameModel.MaxRolls;
+        Color diceColor = model.IsStarted ? PlayerPalette.Tint(model.CurrentIndex) : SystemColors.Control;
 
         status.Text = !model.IsStarted ? "Click New game to start."
             : model.IsComplete ? "Game over."
@@ -133,6 +148,7 @@ public partial class MainForm : Form
         {
             bool held = model.Held[i];
             dice[i].Checked = held;
+            dice[i].BackColor = diceColor;
             string value = model.RollsUsed == 0 ? "-" : DieFace(model.Dice[i]);
             dice[i].Text = rolling ? $"{value}\n{(held ? "HELD" : "roll")}" : value;
         }
@@ -152,7 +168,13 @@ public partial class MainForm : Form
         if (!model.IsStarted) return;
 
         for (int p = 0; p < model.Players.Count; p++)
+        {
             grid.Columns[p + 1].HeaderText = (p == model.CurrentIndex && model.InProgress ? "> " : "") + model.Players[p].Name;
+            Color headerColor = PlayerPalette.Tint(p);
+            grid.Columns[p + 1].HeaderCell.Style.BackColor = headerColor;
+            grid.Columns[p + 1].HeaderCell.Style.SelectionBackColor = headerColor;
+            grid.Columns[p + 1].HeaderCell.Style.SelectionForeColor = SystemColors.ControlText;
+        }
         grid.Columns[0].HeaderText = "Category";
         grid.Columns[columns - 1].HeaderText = "Preview";
         for (int r = 0; r < 13; r++)

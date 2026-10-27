@@ -1,6 +1,26 @@
 using Yahtzee.Core;
 namespace Yahtzee.WinForms;
 
+internal static class PlayerPalette
+{
+    public static IReadOnlyList<Color> Colors { get; } =
+    [
+        Color.FromArgb(80, 184, 139),
+        Color.FromArgb(75, 127, 235),
+        Color.FromArgb(243, 163, 47),
+        Color.FromArgb(232, 74, 95),
+    ];
+
+    public static Color Tint(int playerIndex)
+    {
+        Color color = Colors[playerIndex];
+        return Color.FromArgb(
+            (color.R + 255) / 2,
+            (color.G + 255) / 2,
+            (color.B + 255) / 2);
+    }
+}
+
 // Asks for the number of players, their names and whether each is human or computer.
 public partial class SetupDialog : Form
 {

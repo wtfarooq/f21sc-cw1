@@ -55,7 +55,7 @@ partial class SetupDialog
         // dot0
         // 
         dot0.Font = new Font("Segoe UI", 18F);
-        dot0.ForeColor = Color.FromArgb(80, 184, 139);
+        dot0.ForeColor = PlayerPalette.Colors[0];
         dot0.Location = new Point(36, 91);
         dot0.Name = "dot0";
         dot0.Size = new Size(36, 48);
@@ -67,7 +67,7 @@ partial class SetupDialog
         // dot1
         // 
         dot1.Font = new Font("Segoe UI", 18F);
-        dot1.ForeColor = Color.FromArgb(75, 127, 235);
+        dot1.ForeColor = PlayerPalette.Colors[1];
         dot1.Location = new Point(36, 128);
         dot1.Name = "dot1";
         dot1.Size = new Size(36, 48);
@@ -79,7 +79,7 @@ partial class SetupDialog
         // dot2
         // 
         dot2.Font = new Font("Segoe UI", 18F);
-        dot2.ForeColor = Color.FromArgb(243, 163, 47);
+        dot2.ForeColor = PlayerPalette.Colors[2];
         dot2.Location = new Point(36, 165);
         dot2.Name = "dot2";
         dot2.Size = new Size(36, 48);
@@ -91,7 +91,7 @@ partial class SetupDialog
         // dot3
         // 
         dot3.Font = new Font("Segoe UI", 18F);
-        dot3.ForeColor = Color.FromArgb(232, 74, 95);
+        dot3.ForeColor = PlayerPalette.Colors[3];
         dot3.Location = new Point(36, 208);
         dot3.Name = "dot3";
         dot3.Size = new Size(36, 48);
