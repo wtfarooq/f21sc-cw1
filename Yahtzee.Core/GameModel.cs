@@ -71,7 +71,7 @@ public sealed class GameModel
 
     public GameSnapshot Snapshot() => new()
     {
-        Players = Players.Select(p => new PlayerSnapshot { Name = p.Name, Type = p.Type, Scores = [.. p.Card.Scores] }).ToList(),
+        Players = Players.Select(p => new PlayerSnapshot { Name = p.Name, Type = p.Type, Strategy = p.Strategy, Scores = [.. p.Card.Scores] }).ToList(),
         CurrentPlayer = CurrentIndex,
         RollsUsed = RollsUsed,
         Dice = [.. dice],
@@ -91,7 +91,8 @@ public sealed class GameModel
         foreach (var p in s.Players)
         {
             if (p.Scores.Length != 13 || p.Scores.Any(x => x is < 0 or > 50)) throw new ArgumentException("Bad scores.");
-            var player = new Player(p.Name, p.Type);
+            if (p.Strategy is AiStrategy strategy && !Enum.IsDefined(strategy)) throw new ArgumentException("Bad AI strategy.");
+            var player = new Player(p.Name, p.Type, p.Strategy);
             for (int i = 0; i < 13; i++)
                 if (p.Scores[i] is int score) player.Card.Set((ScoreCategory)i, score);
             players.Add(player);

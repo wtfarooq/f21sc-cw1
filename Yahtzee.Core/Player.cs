@@ -1,6 +1,7 @@
 namespace Yahtzee.Core;
 
 public enum PlayerType { Human, Computer }
+public enum AiStrategy { Greedy, Random }
 
 // One score per category; null means the category is not used yet.
 public sealed class Scorecard
@@ -21,12 +22,14 @@ public sealed class Player
 {
     public string Name { get; }
     public PlayerType Type { get; }
+    public AiStrategy? Strategy { get; }
     public Scorecard Card { get; } = new();
 
-    public Player(string name, PlayerType type)
+    public Player(string name, PlayerType type, AiStrategy? strategy = null)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(name);
         Name = name.Trim();
         Type = type;
+        Strategy = type == PlayerType.Computer ? strategy ?? AiStrategy.Greedy : null;
     }
 }

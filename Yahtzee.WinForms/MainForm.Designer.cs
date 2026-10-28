@@ -50,7 +50,7 @@ partial class MainForm
         grid.RowHeadersVisible = false;
         grid.RowHeadersWidth = 62;
         grid.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-        grid.Size = new Size(759, 596);
+        grid.Size = new Size(844, 596);
         grid.TabIndex = 0;
         // 
         // message
@@ -58,7 +58,7 @@ partial class MainForm
         message.Dock = DockStyle.Bottom;
         message.Location = new Point(0, 768);
         message.Name = "message";
-        message.Size = new Size(759, 28);
+        message.Size = new Size(844, 28);
         message.TabIndex = 1;
         message.TextAlign = ContentAlignment.MiddleLeft;
         // 
@@ -73,7 +73,7 @@ partial class MainForm
         dicePanel.Location = new Point(0, 82);
         dicePanel.Name = "dicePanel";
         dicePanel.Padding = new Padding(8);
-        dicePanel.Size = new Size(759, 90);
+        dicePanel.Size = new Size(844, 90);
         dicePanel.TabIndex = 2;
         // 
         // dice0
@@ -81,7 +81,6 @@ partial class MainForm
         dice0.Appearance = Appearance.Button;
         dice0.AutoCheck = false;
         dice0.FlatStyle = FlatStyle.Flat;
-        dice0.ImageAlign = ContentAlignment.MiddleCenter;
         dice0.Location = new Point(8, 8);
         dice0.Margin = new Padding(0);
         dice0.Name = "dice0";
@@ -94,7 +93,6 @@ partial class MainForm
         dice1.Appearance = Appearance.Button;
         dice1.AutoCheck = false;
         dice1.FlatStyle = FlatStyle.Flat;
-        dice1.ImageAlign = ContentAlignment.MiddleCenter;
         dice1.Location = new Point(88, 8);
         dice1.Margin = new Padding(0);
         dice1.Name = "dice1";
@@ -107,7 +105,6 @@ partial class MainForm
         dice2.Appearance = Appearance.Button;
         dice2.AutoCheck = false;
         dice2.FlatStyle = FlatStyle.Flat;
-        dice2.ImageAlign = ContentAlignment.MiddleCenter;
         dice2.Location = new Point(168, 8);
         dice2.Margin = new Padding(0);
         dice2.Name = "dice2";
@@ -120,7 +117,6 @@ partial class MainForm
         dice3.Appearance = Appearance.Button;
         dice3.AutoCheck = false;
         dice3.FlatStyle = FlatStyle.Flat;
-        dice3.ImageAlign = ContentAlignment.MiddleCenter;
         dice3.Location = new Point(248, 8);
         dice3.Margin = new Padding(0);
         dice3.Name = "dice3";
@@ -133,7 +129,6 @@ partial class MainForm
         dice4.Appearance = Appearance.Button;
         dice4.AutoCheck = false;
         dice4.FlatStyle = FlatStyle.Flat;
-        dice4.ImageAlign = ContentAlignment.MiddleCenter;
         dice4.Location = new Point(328, 8);
         dice4.Margin = new Padding(0);
         dice4.Name = "dice4";
@@ -147,7 +142,7 @@ partial class MainForm
         status.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
         status.Location = new Point(0, 0);
         status.Name = "status";
-        status.Size = new Size(759, 32);
+        status.Size = new Size(844, 32);
         status.TabIndex = 4;
         status.TextAlign = ContentAlignment.MiddleLeft;
         // 
@@ -217,12 +212,12 @@ partial class MainForm
         buttons.Location = new Point(0, 32);
         buttons.Name = "buttons";
         buttons.Padding = new Padding(4);
-        buttons.Size = new Size(759, 50);
+        buttons.Size = new Size(844, 50);
         buttons.TabIndex = 3;
         // 
         // MainForm
         // 
-        ClientSize = new Size(759, 796);
+        ClientSize = new Size(844, 796);
         Controls.Add(grid);
         Controls.Add(message);
         Controls.Add(dicePanel);

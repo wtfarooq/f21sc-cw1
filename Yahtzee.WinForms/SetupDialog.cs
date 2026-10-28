@@ -1,26 +1,6 @@
 using Yahtzee.Core;
 namespace Yahtzee.WinForms;
 
-internal static class PlayerPalette
-{
-    public static IReadOnlyList<Color> Colors { get; } =
-    [
-        Color.FromArgb(75, 127, 235),
-        Color.FromArgb(232, 74, 95),
-        Color.FromArgb(80, 184, 139),
-        Color.FromArgb(243, 163, 47),
-    ];
-
-    public static Color Tint(int playerIndex)
-    {
-        Color color = Colors[playerIndex];
-        return Color.FromArgb(
-            (color.R + 255) / 2,
-            (color.G + 255) / 2,
-            (color.B + 255) / 2);
-    }
-}
-
 // Asks for the number of players, their names and whether each is human or computer.
 public partial class SetupDialog : Form
 {
@@ -29,6 +9,7 @@ public partial class SetupDialog : Form
         InitializeComponent();
         names = [name0, name1, name2, name3];
         types = [type0, type1, type2, type3];
+        strategies = [strategy0, strategy1, strategy2, strategy3];
 
         for (int i = 0; i < 4; i++)
         {
@@ -36,8 +17,9 @@ public partial class SetupDialog : Form
             int index = i;
             types[i].DataSource = Enum.GetValues<PlayerType>();
             types[i].SelectedItem = index == 0 ? PlayerType.Human : PlayerType.Computer;
+            strategies[i].DataSource = Enum.GetValues<AiStrategy>();
             names[i].Text = index == 0 ? "Player 1" : $"Bot {index + 1}";
-            types[i].SelectedIndexChanged += (_, _) => AutoName(index);
+            types[i].SelectedIndexChanged += (_, _) => { AutoName(index); UpdateRows(); };
         }
         count.ValueChanged += (_, _) => UpdateRows();
         UpdateRows();
@@ -53,8 +35,11 @@ public partial class SetupDialog : Form
             names[i].Text = $"Player {i + 1}";
     }
 
-    public List<(string Name, PlayerType Type)> Players =>
-        Enumerable.Range(0, (int)count.Value).Select(i => (names[i].Text, (PlayerType)types[i].SelectedItem!)).ToList();
+    public List<(string Name, PlayerType Type, AiStrategy? Strategy)> Players =>
+        Enumerable.Range(0, (int)count.Value).Select(i =>
+            (names[i].Text, (PlayerType)types[i].SelectedItem!,
+                (PlayerType)types[i].SelectedItem! == PlayerType.Computer
+                    ? (AiStrategy?)strategies[i].SelectedItem! : null)).ToList();
 
     private void UpdateRows()
     {
@@ -62,6 +47,7 @@ public partial class SetupDialog : Form
         {
             names[i].Enabled = i < count.Value;
             types[i].Enabled = i < count.Value;
+            strategies[i].Enabled = i < count.Value && (PlayerType)types[i].SelectedItem! == PlayerType.Computer;
         }
     }
 }

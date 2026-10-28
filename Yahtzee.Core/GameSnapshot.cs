@@ -5,6 +5,7 @@ public sealed class PlayerSnapshot
 {
     public string Name { get; set; } = "";
     public PlayerType Type { get; set; }
+    public AiStrategy? Strategy { get; set; }
     public int?[] Scores { get; set; } = [];
 }
 

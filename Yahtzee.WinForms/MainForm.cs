@@ -73,7 +73,7 @@ public partial class MainForm : Form
 
     private void ClosingForm(object? sender, FormClosingEventArgs e)
     {
-        if (!model.InProgress || !controller.IsDirty) return;
+        if (!model.InProgress || !controller.HasUnsavedChanges) return;
         var answer = MessageBox.Show(this, "Save the game before exiting?", "Yahtzee", MessageBoxButtons.YesNoCancel);
         if (answer == DialogResult.Cancel || (answer == DialogResult.Yes && !SaveGame())) e.Cancel = true;
     }

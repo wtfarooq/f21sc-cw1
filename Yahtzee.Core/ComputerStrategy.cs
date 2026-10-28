@@ -1,6 +1,7 @@
 namespace Yahtzee.Core;
 
-// Trivial AI: keep the most common face, reroll the rest, then take the best-scoring free category.
+// Greedy keeps the most common face and maximizes points
+// Random rerolls and picks any free category.
 public static class ComputerStrategy
 {
     public static string PlayTurn(GameModel game) =>
@@ -10,9 +11,11 @@ public static class ComputerStrategy
     // then we await pause so the user actually sees each roll and hold.
     public static async Task<string> PlayTurnAsync(GameModel game, Func<Task>? pause = null)
     {
+        var strategy = game.CurrentPlayer.Strategy
+            ?? throw new InvalidOperationException("The current player has no AI strategy.");
         game.Roll();
         if (pause != null) await pause();
-        while (game.RollsLeft > 0)
+        while (game.RollsLeft > 0 && strategy == AiStrategy.Greedy)
         {
             int face = game.Dice.GroupBy(d => d).OrderByDescending(g => g.Count()).ThenByDescending(g => g.Key).First().Key;
             for (int i = 0; i < game.Dice.Count; i++)
@@ -22,9 +25,17 @@ public static class ComputerStrategy
             game.Roll();
             if (pause != null) await pause();
         }
+        while (game.RollsLeft > 0)
+        {
+            game.Roll();
+            if (pause != null) await pause();
+        }
 
         var player = game.CurrentPlayer;
-        var category = Enum.GetValues<ScoreCategory>().Where(c => !player.Card.IsUsed(c)).MaxBy(game.Preview);
+        var available = Enum.GetValues<ScoreCategory>().Where(c => !player.Card.IsUsed(c)).ToArray();
+        var category = strategy == AiStrategy.Greedy
+            ? available.MaxBy(game.Preview)
+            : available[Random.Shared.Next(available.Length)];
         int points = game.Preview(category);
         game.Score(category);
         return $"{player.Name} scored {points} in {category}.";

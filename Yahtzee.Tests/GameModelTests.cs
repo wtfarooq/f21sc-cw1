@@ -4,10 +4,11 @@ namespace Yahtzee.Tests;
 [TestClass]
 public class GameModelTests
 {
-    private static GameModel NewGame(int players = 2, PlayerType type = PlayerType.Human)
+    private static GameModel NewGame(int players = 2, PlayerType type = PlayerType.Human,
+        AiStrategy strategy = AiStrategy.Greedy)
     {
         var game = new GameModel(new Random(1));
-        game.Start(Enumerable.Range(1, players).Select(i => new Player($"P{i}", type)));
+        game.Start(Enumerable.Range(1, players).Select(i => new Player($"P{i}", type, strategy)));
         return game;
     }
 
@@ -101,9 +102,17 @@ public class GameModelTests
     }
 
     [TestMethod]
+    public void RandomComputerPlaysAWholeGame()
+    {
+        var game = NewGame(2, PlayerType.Computer, AiStrategy.Random);
+        while (game.InProgress) ComputerStrategy.PlayTurn(game);
+        Assert.IsTrue(game.Players.All(p => p.Card.IsFull));
+    }
+
+    [TestMethod]
     public void SnapshotRoundTrips()
     {
-        var game = NewGame(2);
+        var game = NewGame(2, PlayerType.Computer, AiStrategy.Random);
         game.Roll(); game.Score(ScoreCategory.Chance);
         game.Roll(); game.ToggleHold(2);
         var copy = new GameModel();
@@ -114,6 +123,7 @@ public class GameModelTests
         CollectionAssert.AreEqual(game.Held.ToArray(), copy.Held.ToArray());
         Assert.AreEqual(game.Players[0].Card.Total, copy.Players[0].Card.Total);
         Assert.AreEqual("P1", copy.Players[0].Name);
+        Assert.AreEqual(AiStrategy.Random, copy.Players[0].Strategy);
     }
 
     [TestMethod]

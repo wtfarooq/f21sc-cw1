@@ -27,15 +27,15 @@ public static class Scoring
             ScoreCategory.ThreeOfAKind => most >= 3 ? sum : 0,
             ScoreCategory.FourOfAKind => most >= 4 ? sum : 0,
             ScoreCategory.FullHouse => most == 3 && counts.Contains(2) ? 25 : 0,
-            ScoreCategory.SmallStraight => HasRun(counts, 4) ? 30 : 0,
-            ScoreCategory.LargeStraight => HasRun(counts, 5) ? 40 : 0,
+            ScoreCategory.SmallStraight => HasConsecutiveFaces(counts, 4) ? 30 : 0,
+            ScoreCategory.LargeStraight => HasConsecutiveFaces(counts, 5) ? 40 : 0,
             ScoreCategory.Yahtzee => most == 5 ? 50 : 0,
             _ => throw new ArgumentOutOfRangeException(nameof(category)),
         };
     }
 
     // True if `length` consecutive faces all appear at least once.
-    private static bool HasRun(int[] counts, int length)
+    private static bool HasConsecutiveFaces(int[] counts, int length)
     {
         for (int start = 1; start + length - 1 <= 6; start++)
             if (Enumerable.Range(start, length).All(f => counts[f] > 0)) return true;

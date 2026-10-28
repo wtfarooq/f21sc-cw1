@@ -17,18 +17,18 @@ public sealed class GameController
     {
         this.model = model;
         this.dbPath = dbPath;
-        model.Changed += (_, _) => IsDirty = true;
+        model.Changed += (_, _) => HasUnsavedChanges = true;
     }
 
     // True when the game changed since it was last saved (or started/loaded).
-    public bool IsDirty { get; private set; }
+    public bool HasUnsavedChanges { get; private set; }
 
-    public OperationOutcome NewGame(IEnumerable<(string Name, PlayerType Type)> players) =>
+    public OperationOutcome NewGame(IEnumerable<(string Name, PlayerType Type, AiStrategy? Strategy)> players) =>
         Execute(() =>
         {
-            model.Start(players.Select(p => new Player(p.Name, p.Type)));
+            model.Start(players.Select(p => new Player(p.Name, p.Type, p.Strategy)));
             recorded = false;
-            IsDirty = false;
+            HasUnsavedChanges = false;
         }, "New game started.");
 
     public OperationOutcome Roll() => Execute(model.Roll, "Rolled.");
@@ -51,10 +51,10 @@ public sealed class GameController
         });
 
     public OperationOutcome Save(string path) =>
-        Execute(() => { GameFiles.Save(path, model.Snapshot()); IsDirty = false; }, "Game saved.");
+        Execute(() => { GameFiles.Save(path, model.Snapshot()); HasUnsavedChanges = false; }, "Game saved.");
 
     public OperationOutcome Load(string path) =>
-        Execute(() => { model.Restore(GameFiles.Load(path)); recorded = false; IsDirty = false; }, "Game loaded.");
+        Execute(() => { model.Restore(GameFiles.Load(path)); recorded = false; HasUnsavedChanges = false; }, "Game loaded.");
 
     public List<HighScore> HighScores(string? player) =>
         GameStore.TopScores(dbPath, string.IsNullOrWhiteSpace(player) ? null : player.Trim());
